@@ -1,4 +1,4 @@
 export default {
-    url: "http://localhost/wordpress",
+    url: "https://thachpham.com",
     trangchune: 1
 }

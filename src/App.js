@@ -135,41 +135,40 @@ const windowSize = Dimensions.get('window');
    
   }
 
-  renderHeader = () => {
+  // renderHeader = () => {
     
-    return (
-      <Text
-        style={{
-          alignSelf: "center",
-          color: "red",
-          fontWeight: "bold",
-          fontSize: 20,
-          marginBottom: 0
-        }}
-      >
-        {this.state.siteTitle}
-      </Text>
+  //   return (
+  //     <Text
+  //       style={{
+  //         alignSelf: "center",
+  //         color: "red",
+  //         fontWeight: "bold",
+  //         fontSize: 20,
+  //         marginBottom: 0
+  //       }}
+  //     >
+  //       {this.state.siteTitle}
+  //     </Text>
 
     
       
-    );
+  //   );
    
-  };
-  renderFooter = () => {
+  // };
+  // renderFooter = () => {
 
-    return (
-      <View
-        style={{
-          paddingVertical: 5,
-          borderTopWidth: 1,
-          marginTop: 20
+  //   return (
+  //     <View
+  //       style={{
+  //         paddingVertical: 5,
+  //         borderTopWidth: 1,
          
-        }}
-      >
-         
-      </View>
-    );
-  };
+  //       }}
+  //     > 
+  //         <ActivityIndicator animating={this.state.loading} size={'small'} />
+  //     </View>
+  //   );
+  // };
 
   handleRefresh = () => {
     this.setState(
@@ -224,12 +223,13 @@ const windowSize = Dimensions.get('window');
   rightComponent={{ icon: 'home', color: '#fff' }}
 />
     {
-      this.state.loading ? <ActivityIndicator size={'large'} /> : <FlatList 
+      this.state.loading ? <ActivityIndicator animating size={'large'} /> :
+       <FlatList 
       style={{flex: 1}}
         data={this.state.data}
         keyExtractor={item => item.id.toString()}
         // ListHeaderComponent={this.renderHeader}
-        // ListFooterComponent={this.renderFooter}
+         //ListFooterComponent={this.renderFooter}
 
         renderItem={({ item }) => {
         
@@ -237,7 +237,7 @@ const windowSize = Dimensions.get('window');
         const thang = item.date.substring(5,7);
         const ngay = item.date.substring(8,10);
         
-        const hinhanh = item.better_featured_image === null? no_image: {uri: item.better_featured_image.source_url};     
+      //  const hinhanh = item.better_featured_image === null? no_image: {uri: item.better_featured_image.source_url};     
 
         //  var featuredMediaNe = this.getImage(item.featured_media);
          
@@ -253,7 +253,7 @@ const windowSize = Dimensions.get('window');
                   
                 >
                
-                   <Image style={{width: windowSize.width/1.2, height: windowSize.width/2}} source={ hinhanh}  />
+                   {/* <Image style={{width: windowSize.width/1.2, height: windowSize.width/2}} source={ hinhanh}  /> */}
    
                          <HTML html = {item.excerpt.rendered}/>
                  
@@ -304,7 +304,7 @@ const windowSize = Dimensions.get('window');
         onRefresh={this.handleRefresh}
         refreshing={this.state.refreshing}
         onEndReached={this.handleLoadMore}
-        onEndReachedThreshold={-0.1}
+        onEndReachedThreshold={0.1}
       />
     }
         
