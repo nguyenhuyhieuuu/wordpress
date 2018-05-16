@@ -17,6 +17,8 @@ import HTML from "react-native-render-html";
 import { createStackNavigator } from 'react-navigation'; // Version can be 
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
+import PostCard from './components/PostCard';
+
 var statusBarHeight = getStatusBarHeight();
 
 
@@ -45,28 +47,29 @@ const windowSize = Dimensions.get('window');
   }
 
 
-  // getImage(idFeaturedMedia) {
-  //   const urlFeaturedMedia = config.url+"/wp-json/wp/v2/media/"+idFeaturedMedia;
-  //   fetch(urlFeaturedMedia)
-  //   .then(
-  //     res => {
-  //       return res.json();
-  //     }
-  //   )
-  //   .then(
-  //     resJson => {
-  //       this.setState({
-  //         featuredMedia: resJson.guid.rendered
-  //         });
-  //         console.log("anh nè: "+resJson.guid.rendered);
+  getImage(idFeaturedMedia) {
+    const urlFeaturedMedia = config.url+"/wp-json/wp/v2/media/"+idFeaturedMedia;
+    fetch(urlFeaturedMedia)
+    .then(
+      res => {
+        return res.json();
+      }
+    )
+    .then(
+      resJson => {
+        this.setState({
+          featuredMedia: resJson.guid.rendered
+          });
+          console.log("anh nè: "+resJson.guid.rendered);
        
-  //       })
-  //     .catch(error => {
-  //         console.log(error);
+        })
+      .catch(error => {
+          console.log(error);
          
-  //       });
-  //    return this.state.featuredMedia;
-  // }
+        });
+     return this.state.featuredMedia;
+  }
+  
   fetchData = () => {
     const { page } = this.state;
     //alert(config);
@@ -125,7 +128,7 @@ const windowSize = Dimensions.get('window');
       })
       .then(res => {
         this.setState({
-          siteTitle: res.name
+          siteTitle: res.name.substring(0,19) //nếu tiêu đề dài quá thì cắt bớt từ 0, tới 19
         });
         
       })
@@ -184,12 +187,18 @@ const windowSize = Dimensions.get('window');
 
   handleLoadMore = () => {
     console.log("so bai viet là:" + this.state.totalPost);
-    var pageMax = Math.round(this.state.totalPost/10);
+    var pageMax = Math.floor(this.state.totalPost/10); //Math.floor để làm tròn xuống
     var pageMaxResidual = this.state.totalPost%10;
-
-    if(pageMaxResidual > 0) {
+    
+    if(this.state.totalPost < 10) {
+      pageMax =1; 
+    }
+    else 
+    {
+      if(pageMaxResidual > 0) {
       pageMax += 1;
     }
+  }
   
     console.log("so trang là: " + pageMax);
    if (this.state.page < pageMax){
@@ -233,9 +242,12 @@ const windowSize = Dimensions.get('window');
 
         renderItem={({ item }) => {
         
-        const nam = item.date.substring(0,4);
-        const thang = item.date.substring(5,7);
-        const ngay = item.date.substring(8,10);
+        const yearPost = item.date.substring(0,4);
+        const monthPost = item.date.substring(5,7);
+        const dayPost = item.date.substring(8,10);
+
+        const excerptLength = item.excerpt.rendered.length;
+        const excerptContent = excerptLength > 200? item.excerpt.rendered.substring(0,200)+" ...": item.excerpt.rendered;
         
       //  const hinhanh = item.better_featured_image === null? no_image: {uri: item.better_featured_image.source_url};     
 
@@ -247,49 +259,7 @@ const windowSize = Dimensions.get('window');
 
             return (
               <View>
-                <Card
-                 containerStyle={{margin: 5}}
-                  title={item.title.rendered}
-                  
-                >
-               
-                   {/* <Image style={{width: windowSize.width/1.2, height: windowSize.width/2}} source={ hinhanh}  /> */}
-   
-                         <HTML html = {item.excerpt.rendered}/>
-                 
-                  <View style={{ flex: 1, flexDirection: 'row'}}>
-                    <Button
-                      icon={<Icon name="code" color="#ffffff" />}
-                      backgroundColor="#03A9F4"
-                      buttonStyle={{
-                        borderRadius: 0,
-                        marginLeft: 0,
-                        marginRight: 0,
-                        marginBottom: 0,
-                        width: 120
-                      
-                      }}
-                      title={ngay + "-"+ thang + "-" + nam }
-                      onPress={() => alert('hieune')} 
-                    />
-                    <Button
-                      icon={<Icon name="code" color="#ffffff" />}
-                      backgroundColor="#03A9F4"
-                      buttonStyle={{
-                        borderRadius: 0,
-                        marginLeft: 0,
-                        marginRight: 0,
-                        marginBottom: 0,
-                        width: 120
-                      
-                      }}
-                      title="Xem chi tiết"
-                      onPress={() => {this.props.navigation.navigate('Detail', {detailContentNe: item.content.rendered}) } }
-                    />
-                  </View>
-                 
-                  
-                </Card>
+                  <PostCard title={item.title.rendered} handleDetail={() => this.props.navigation.navigate('Detail', {detailContent: item.content.rendered })} excerpt={excerptContent} />
                 <View
                   style={{
                     height: 1,
