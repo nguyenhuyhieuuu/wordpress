@@ -1,4 +1,4 @@
 export default {
-    url: "https://nguyenhuyhieu.com",
-    trangchune: 1
+    url: "https://thachpham.com",
+   
 }

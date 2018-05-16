@@ -27,7 +27,7 @@ import config from "./config/config";
 
 import no_image from './images/no_image.png';
 
-
+var HINH = [];
 const windowSize = Dimensions.get('window');
 
  class HomeScreen extends Component {
@@ -42,40 +42,15 @@ const windowSize = Dimensions.get('window');
       refreshing: false,
       siteTitle: "",
       totalPost: 0,
-      featuredMedia: "",
     };
   }
 
-
-  getImage(idFeaturedMedia) {
-    const urlFeaturedMedia = config.url+"/wp-json/wp/v2/media/"+idFeaturedMedia;
-    fetch(urlFeaturedMedia)
-    .then(
-      res => {
-        return res.json();
-      }
-    )
-    .then(
-      resJson => {
-        this.setState({
-          featuredMedia: resJson.guid.rendered
-          });
-          console.log("anh nè: "+resJson.guid.rendered);
-       
-        })
-      .catch(error => {
-          console.log(error);
-         
-        });
-     return this.state.featuredMedia;
-  }
-  
   fetchData = () => {
     const { page } = this.state;
     //alert(config);
     //đối với máy android thì để localhost nó không nhận dc mà phải sửa thành IP v4 của wifi hay mạng đang kết nối
    
-    const url = config.url+"/wp-json/wp/v2/posts/?page="+page;
+    const url = config.url+"/wp-json/wp/v2/posts/?page="+page+"&_embed";
 
     this.setState({ loading: true });
     fetch(url,
@@ -95,17 +70,15 @@ const windowSize = Dimensions.get('window');
           });
 
           return res.json();
-
       })
       .then(resJson => {
-
-       
-     //sử dụng dòng này nếu muốn load danh sách danh sách post mới vẫn dữ lại post cũ
-     //const arrayData = [...this.state.data, ...resJson];
      
+        //sử dụng dòng này nếu muốn load danh sách danh sách post mới vẫn dữ lại post cũ
+        //const arrayData = [...this.state.data, ...resJson];
+
         this.setState({
         //data: page === 1 ? resJson : arrayData,
-        data: resJson,
+          data: resJson,
           loading: false,
           refreshing: false
         });
@@ -120,16 +93,18 @@ const windowSize = Dimensions.get('window');
   
 
   componentDidMount() {
-    
-    const urlSiteDetail = config.url+"/wp-json";
-    fetch(urlSiteDetail)
+    //fetch để lấy tiêu đề của website
+    const url = config.url+"/wp-json";
+    fetch(url)
       .then(res => {
         return res.json();
       })
       .then(res => {
         this.setState({
-          siteTitle: res.name.substring(0,19) //nếu tiêu đề dài quá thì cắt bớt từ 0, tới 19
+          siteTitle: res.name.substring(0,20) //nếu tiêu đề dài quá thì cắt bớt từ 0, tới 19
         });
+
+
         
       })
       .catch(error => {});
@@ -137,42 +112,6 @@ const windowSize = Dimensions.get('window');
     this.fetchData();
    
   }
-
-  // renderHeader = () => {
-    
-  //   return (
-  //     <Text
-  //       style={{
-  //         alignSelf: "center",
-  //         color: "red",
-  //         fontWeight: "bold",
-  //         fontSize: 20,
-  //         marginBottom: 0
-  //       }}
-  //     >
-  //       {this.state.siteTitle}
-  //     </Text>
-
-    
-      
-  //   );
-   
-  // };
-  // renderFooter = () => {
-
-  //   return (
-  //     <View
-  //       style={{
-  //         paddingVertical: 5,
-  //         borderTopWidth: 1,
-         
-  //       }}
-  //     > 
-  //         <ActivityIndicator animating={this.state.loading} size={'small'} />
-  //     </View>
-  //   );
-  // };
-
   handleRefresh = () => {
     this.setState(
       {
@@ -186,7 +125,7 @@ const windowSize = Dimensions.get('window');
   };
 
   handleLoadMore = () => {
-    console.log("so bai viet là:" + this.state.totalPost);
+   // console.log("so bai viet là:" + this.state.totalPost);
     var pageMax = Math.floor(this.state.totalPost/10); //Math.floor để làm tròn xuống
     var pageMaxResidual = this.state.totalPost%10;
     
@@ -200,7 +139,7 @@ const windowSize = Dimensions.get('window');
     }
   }
   
-    console.log("so trang là: " + pageMax);
+   // console.log("so trang là: " + pageMax);
    if (this.state.page < pageMax){
     this.setState(
       {
@@ -237,10 +176,7 @@ const windowSize = Dimensions.get('window');
       style={{flex: 1}}
         data={this.state.data}
         keyExtractor={item => item.id.toString()}
-        // ListHeaderComponent={this.renderHeader}
-         //ListFooterComponent={this.renderFooter}
-
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
         
         const yearPost = item.date.substring(0,4);
         const monthPost = item.date.substring(5,7);
@@ -249,17 +185,16 @@ const windowSize = Dimensions.get('window');
         const excerptLength = item.excerpt.rendered.length;
         const excerptContent = excerptLength > 200? item.excerpt.rendered.substring(0,200)+" ...": item.excerpt.rendered;
         
-      //  const hinhanh = item.better_featured_image === null? no_image: {uri: item.better_featured_image.source_url};     
 
-        //  var featuredMediaNe = this.getImage(item.featured_media);
-         
-        //  const hinhanh = featuredMediaNe === null? no_image: {uri: featuredMediaNe};     
-
-         
-
+         const featuredMedia = item._embedded['wp:featuredmedia'][0].source_url === null ? no_image: {uri: item._embedded['wp:featuredmedia'][0].source_url};     
+        
             return (
               <View>
-                  <PostCard title={item.title.rendered} handleDetail={() => this.props.navigation.navigate('Detail', {detailContent: item.content.rendered })} excerpt={excerptContent} />
+                  <PostCard 
+                  title={item.title.rendered}
+                  featuredMedia={featuredMedia}
+                   handleDetail={() => this.props.navigation.navigate('Detail', {detailContent: item.content.rendered })} 
+                   excerpt={excerptContent} />
                 <View
                   style={{
                     height: 1,
@@ -268,6 +203,7 @@ const windowSize = Dimensions.get('window');
                   }}
                 />
               </View>
+             
             );
         }}
         ref= "listPosts"

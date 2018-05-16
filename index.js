@@ -1,6 +1,6 @@
 import { AppRegistry } from 'react-native';
 import App from './src/App';
-import Video from './src/Video-2'
+import DetailContent from './src/components/DetailContent';
 
 import React, { Component } from 'react';
 

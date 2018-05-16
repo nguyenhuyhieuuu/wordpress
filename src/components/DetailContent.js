@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { Text,StyleSheet,View,ScrollView, Image,  Dimensions} from 'react-native';
-import { createStackNavigator } from 'react-navigation'; 
+import { ActivityIndicator,View, Text, ScrollView, TouchableOpacity, Dimensions, Linking } from 'react-native';
 import HTML from 'react-native-render-html';
-import { Button } from 'react-native-elements';
+import EXAMPLES, * as snippets from './snippets';
+import styles from './styles';
 
-const IMAGES_MAX_WIDTH = Dimensions.get('window').width - 50;
+const IMAGES_MAX_WIDTH = Dimensions.get('window').width - 100;
 const CUSTOM_STYLES = {};
-const CUSTOM_RENDERERS = {
-   
-    b: () => <Text style={{color: 'red', fontSize: 50}}>tui ne</Text>
-};
+const CUSTOM_RENDERERS = {};
 const DEFAULT_PROPS = {
     htmlStyles: CUSTOM_STYLES,
     renderers: CUSTOM_RENDERERS,
@@ -18,40 +15,47 @@ const DEFAULT_PROPS = {
     debug: true
 };
 
-
-
 export default class DetailContent extends Component {
-    state = {  }
-    render() {
-        const { navigation } = this.props;
-        const contentDetail = navigation.getParam('detailContent', 'detail Content default if can not get');
-   
+    constructor(props){
+        super(props);
+        this.state = {
+        timePassed: false
+        };
+      }
+      
+      componentDidMount() {
+        setTimeout( () => {
+           this.setTimePassed();
+        },500);
+      }
+      
+      setTimePassed() {
+         this.setState({timePassed: true});
+      }
+      
+      
+      render() {
+        const contentDetail = this.props.navigation.getParam('detailContent', 'detail Content default if can not get');
+    
+      if (!this.state.timePassed){
+        return <ActivityIndicator animating hidesWhenStopped={true} size={'large'}/>
+      }else{
+
+           
         return (
-            <View style={{flex: 1}}>
-                <ScrollView >
-                <View style={styles.container}>
-                    <HTML 
-                        {...DEFAULT_PROPS}
-                    
-                    html={contentDetail} 
-                    />
-                    </View>
-                    
-                </ScrollView>
-                <Button  title="Trở về" onPress={() => {this.props.navigation.goBack() } } />
+            <ScrollView style={styles.container}>
             
-            </View>
+            <HTML
+              {...DEFAULT_PROPS}
+              html={contentDetail}
+         
+            />
+            
+            </ScrollView> 
+        
         );
+    }
     }
 }
 
-var styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-     
 
-    }
-
-});
