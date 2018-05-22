@@ -13,9 +13,20 @@ import {
   ActivityIndicator
 } from "react-native";
 import { Header,Card, Icon, Button, List, ListItem } from "react-native-elements";
-import HTML from "react-native-render-html";
+
 import { createStackNavigator } from 'react-navigation'; // Version can be 
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from 'react-native-indicators';
 
 import PostCard from './components/PostCard';
 
@@ -27,7 +38,6 @@ import config from "./config/config";
 
 import no_image from './images/no_image.png';
 
-var HINH = [];
 const windowSize = Dimensions.get('window');
 
  class HomeScreen extends Component {
@@ -171,37 +181,36 @@ const windowSize = Dimensions.get('window');
   rightComponent={{ icon: 'home', color: '#fff' }}
 />
     {
-      this.state.loading ? <ActivityIndicator animating size={'large'} /> :
+     // this.state.loading ? < BarIndicator animationDuration={1000} count={5} size={30} color="#06beff"/> :
        <FlatList 
       style={{flex: 1}}
         data={this.state.data}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item, index }) => {
         
+
+          
         const yearPost = item.date.substring(0,4);
         const monthPost = item.date.substring(5,7);
         const dayPost = item.date.substring(8,10);
-
+        const datePost = dayPost + "-" + monthPost + "-" + yearPost;
         const excerptLength = item.excerpt.rendered.length;
         const excerptContent = excerptLength > 200? item.excerpt.rendered.substring(0,200)+" ...": item.excerpt.rendered;
         
 
-         const featuredMedia = item._embedded['wp:featuredmedia'][0].source_url === null ? no_image: {uri: item._embedded['wp:featuredmedia'][0].source_url};     
-        
+         const featuredMedia = item._embedded['wp:featuredmedia'][0].source_url == null ? no_image: {uri: item._embedded['wp:featuredmedia'][0].source_url};     
+       
             return (
               <View>
                   <PostCard 
                   title={item.title.rendered}
                   featuredMedia={featuredMedia}
                    handleDetail={() => this.props.navigation.navigate('Detail', {detailContent: item.content.rendered })} 
-                   excerpt={excerptContent} />
-                <View
-                  style={{
-                    height: 1,
-
-                    backgroundColor: "#CED0CE"
-                  }}
-                />
+                   excerpt={excerptContent} 
+                   datePost={datePost}
+                   
+                   />
+               
               </View>
              
             );

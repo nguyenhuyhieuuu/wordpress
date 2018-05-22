@@ -1,6 +1,6 @@
 import { AppRegistry } from 'react-native';
 import App from './src/App';
-import DetailContent from './src/components/DetailContent';
+import DetailContent from './src/components/DetailContent2';
 
 import React, { Component } from 'react';
 

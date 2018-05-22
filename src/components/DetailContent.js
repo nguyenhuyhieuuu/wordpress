@@ -1,19 +1,57 @@
 import React, { Component } from 'react';
-import { ActivityIndicator,View, Text, ScrollView, TouchableOpacity, Dimensions, Linking } from 'react-native';
-import HTML from 'react-native-render-html';
-import EXAMPLES, * as snippets from './snippets';
-import styles from './styles';
+import {StyleSheet, Image,ActivityIndicator,View, Text, ScrollView, TouchableOpacity, Dimensions, Linking } from 'react-native';
 
-const IMAGES_MAX_WIDTH = Dimensions.get('window').width - 100;
-const CUSTOM_STYLES = {};
-const CUSTOM_RENDERERS = {};
-const DEFAULT_PROPS = {
-    htmlStyles: CUSTOM_STYLES,
-    renderers: CUSTOM_RENDERERS,
-    imagesMaxWidth: IMAGES_MAX_WIDTH,
-    onLinkPress: (evt, href) => { Linking.openURL(href); },
-    debug: true
-};
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from 'react-native-indicators';
+
+import HTMLView from 'react-native-htmlview';
+
+const {width, height} = Dimensions.get('window');
+
+function renderNode(node, index, siblings, parent, defaultRenderer) {
+// ẩn nội dung   
+if(node.name === 'div'){
+  if(node.attribs.id == 'toc_container'){
+    return null;
+  }
+}
+
+if (node.name === 'p') {
+
+   return (
+
+     <Text key={index} style={{color: 'blue'} }>
+   {defaultRenderer(node.children, parent)}
+     </Text>
+     
+   )
+ }
+
+  if (node.name === 'figure') {
+    
+    return (
+         <Image key={index}
+          style={{width: width - 50, height: width -100, resizeMode: 'contain'}}
+          source={{uri: node.children[0].attribs.src}}
+        />
+      );
+  }
+  
+
+  
+
+  
+}
+
 
 export default class DetailContent extends Component {
     constructor(props){
@@ -26,7 +64,7 @@ export default class DetailContent extends Component {
       componentDidMount() {
         setTimeout( () => {
            this.setTimePassed();
-        },500);
+        },1000);
       }
       
       setTimePassed() {
@@ -35,27 +73,34 @@ export default class DetailContent extends Component {
       
       
       render() {
-        const contentDetail = this.props.navigation.getParam('detailContent', 'detail Content default if can not get');
-    
-      if (!this.state.timePassed){
-        return <ActivityIndicator animating hidesWhenStopped={true} size={'large'}/>
-      }else{
+        var contentDetail = this.props.navigation.getParam('detailContent', 'detail Content default if can not get');
+        console.log("NOI DUNG HTML NÈ:" +contentDetail);
+      // if (!this.state.timePassed){
+      //   return < BarIndicator animationDuration={1000} count={5} size={30} color="#06beff"/>
+      // }else{
 
-           
+       // var contentDetailFinal = contentDetail.replace(/(\r\n|\n|\r)/gm,""); 
         return (
-            <ScrollView style={styles.container}>
-            
-            <HTML
-              {...DEFAULT_PROPS}
-              html={contentDetail}
-         
-            />
-            
-            </ScrollView> 
+          <ScrollView style={styles.container}>
+          <HTMLView style={styles.htmlContent} value={contentDetail} renderNode={renderNode} 
+          onLinkPress={(url) => console.log('clicked link: ', url)}
+          />
+        </ScrollView>
         
         );
     }
-    }
+  //  }
 }
 
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  htmlContent: {
+    padding: 5,
+  }
+});
 
