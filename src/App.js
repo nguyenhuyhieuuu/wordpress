@@ -5,30 +5,16 @@ import {
   View,
   FlatList,
   Platform,
-  Image,
-  RefreshControl,
-  AppRegistry,
-  SafeAreaView,
-  SearchBar,
-  ActivityIndicator
 } from "react-native";
-import { Header,Card, Icon, Button, List, ListItem } from "react-native-elements";
 
 import { createStackNavigator } from 'react-navigation'; // Version can be 
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import {
-  BallIndicator,
   BarIndicator,
-  DotIndicator,
-  MaterialIndicator,
-  PacmanIndicator,
-  PulseIndicator,
-  SkypeIndicator,
-  UIActivityIndicator,
-  WaveIndicator,
 } from 'react-native-indicators';
 
 import PostCard from './components/PostCard';
+import Header from './components/Header';
 
 var statusBarHeight = getStatusBarHeight();
 
@@ -176,12 +162,9 @@ const windowSize = Dimensions.get('window');
      
       <View style={{paddingTop: statusBarHeight , flex: 1 } }>
          <Header
-  leftComponent={{ icon: 'menu', color: '#fff' }}
-  centerComponent={{ text: this.state.siteTitle, style: { color: '#fff' } }}
-  rightComponent={{ icon: 'home', color: '#fff' }}
-/>
+    titleWebsite={this.state.siteTitle}/>
     {
-     // this.state.loading ? < BarIndicator animationDuration={1000} count={5} size={30} color="#06beff"/> :
+      this.state.loading ? < BarIndicator animationDuration={1000} count={5} size={30} color="#06beff"/> :
        <FlatList 
       style={{flex: 1}}
         data={this.state.data}
@@ -197,8 +180,7 @@ const windowSize = Dimensions.get('window');
         const excerptLength = item.excerpt.rendered.length;
         const excerptContent = excerptLength > 200? item.excerpt.rendered.substring(0,200)+" ...": item.excerpt.rendered;
         
-
-         const featuredMedia = item._embedded['wp:featuredmedia'][0].source_url == null ? no_image: {uri: item._embedded['wp:featuredmedia'][0].source_url};     
+        const featuredMedia = item._embedded['wp:featuredmedia'][0].source_url == null ? no_image: {uri: item._embedded['wp:featuredmedia'][0].source_url};     
        
             return (
               <View>
