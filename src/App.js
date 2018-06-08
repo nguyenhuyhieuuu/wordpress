@@ -162,7 +162,8 @@ const windowSize = Dimensions.get('window');
      
       <View style={{paddingTop: statusBarHeight , flex: 1 } }>
          <Header
-    titleWebsite={this.state.siteTitle}/>
+    titleWebsite={this.state.siteTitle} />
+    
     {
       this.state.loading ? < BarIndicator animationDuration={1000} count={5} size={30} color="#06beff"/> :
        <FlatList 

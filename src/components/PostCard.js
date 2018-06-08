@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Dimensions,Image,StyleSheet,View, TouchableOpacity, Text } from 'react-native';
 
-import HTMLView from 'react-native-htmlview';
-
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 
 export default class PostCard extends Component {
@@ -20,11 +18,7 @@ export default class PostCard extends Component {
                   <View style={styles.viewFeaturedMedia}>
                   <Image resizeMode="contain" source = {this.props.featuredMedia} style={styles.featuredMedia}/>
                   </View> 
-                  {/* <HTMLView style={styles.excerptPost} value={this.props.excerpt} />
-    
-                 <View style={styles.viewDatePost}>
-                         <Text style={styles.datePost}> #{this.props.datePost}  </Text>
-                         </View> */}
+               
                 </View>
         );
     }

@@ -1,30 +1,28 @@
 import React, { Component } from 'react';
 import { TouchableOpacity,StyleSheet,View, Text, Image } from 'react-native';
-import iconLeft from '../images/iconLeft.png';
-import iconRight from '../images/iconRight.png';
+import icon_left from '../images/icon_left.png';
+import icon_right from '../images/icon_right.png';
 
-
-export default class Header extends Component {
+export default class Header extends Component<Props> {
     static defaultProps = {
-       iconLeft,
-       iconRight,
-       titleWebsite: 'nguyenhuyhieu.com'
-
+       icon_left,
+       icon_right,
+       titleWebsite: 'nguyenhuyhieu.com',
       };
     render() {
         return (
             <View>
             <View style={styles.container}>
                 <TouchableOpacity onPress={() =>{} }>
-                        <Image style= {styles.iconLeft}
-                        source={this.props.iconLeft}/>
+                        <Image style= {styles.icon_left}
+                        source={this.props.icon_left}/>
                         </TouchableOpacity>
                         
                         <Text style={styles.titleWebsite}>
-                            {this.props.titleWebsite}
+                            {this.props.titleWebsite} {this.props.Hieu}
                         </Text>
                         <TouchableOpacity onPress={() =>{} }>       
-                        <Image style={styles.iconRight} source={this.props.iconRight}/>
+                        <Image style={styles.icon_right} source={this.props.icon_right}/>
                       </TouchableOpacity>  
                  </View>
             </View>
@@ -42,7 +40,7 @@ const styles = StyleSheet.create({
             alignItems: 'center',
             padding: 5,
            },
-    iconLeft: {
+    icon_left: {
         width: 25,
         height: 25,
         resizeMode: 'contain'
@@ -50,7 +48,7 @@ const styles = StyleSheet.create({
     titleWebsite: {
         color: 'white'
     },
-    iconRight: {
+    icon_right: {
         width: 25,
         height: 25,
         resizeMode: 'contain'

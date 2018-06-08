@@ -1,4 +1,4 @@
 export default {
-    url: "https://nguyenhuyhieu.com",
+    url: "https://thachpham.com",
     
 }

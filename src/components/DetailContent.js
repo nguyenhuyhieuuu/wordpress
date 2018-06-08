@@ -2,25 +2,13 @@ import React, { Component } from "react";
 import {
   StyleSheet,
   Image,
-  ActivityIndicator,
-  View,
   Text,
   ScrollView,
-  TouchableOpacity,
-  Dimensions,
-  Linking
+  Dimensions
 } from "react-native";
 
 import {
-  BallIndicator,
-  BarIndicator,
-  DotIndicator,
-  MaterialIndicator,
-  PacmanIndicator,
-  PulseIndicator,
-  SkypeIndicator,
-  UIActivityIndicator,
-  WaveIndicator
+  BarIndicator
 } from "react-native-indicators";
 
 import HTMLView from "react-native-htmlview";
